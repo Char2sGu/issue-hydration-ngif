@@ -1,12 +1,20 @@
+import { AsyncPipe, NgIf } from '@angular/common';
+import { pendingUntilEvent } from '@angular/core/rxjs-interop';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { map, timer } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [AsyncPipe, NgIf],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'issue-hydration-ngif';
+  readonly post$ = timer(1000).pipe(
+    map(() => ({
+      title: 'Hello, World!',
+      body: 'Lorem Ipsum',
+    })),
+    pendingUntilEvent()
+  );
 }
